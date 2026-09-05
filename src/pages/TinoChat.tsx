@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import TinoChatComponent from "@/components/TinoChat";
 import { supabase } from "@/integrations/supabase/client";
+import tinoIcon from "@/assets/tino-icon.png";
 import { useToast } from "@/hooks/use-toast";
 
 const TinoChatPage = () => {
@@ -109,7 +110,7 @@ const TinoChatPage = () => {
         </Button>
         <div className="flex items-center gap-3">
           <img 
-            src="/src/assets/tino-icon.png" 
+            src={tinoIcon} 
             alt="Tino"
             className="w-10 h-10 rounded-full"
           />
@@ -132,7 +133,7 @@ const TinoChatPage = () => {
               <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full mx-4">
                 <div className="text-center mb-6">
                   <img 
-                    src="/src/assets/tino-icon.png" 
+                    src={tinoIcon} 
                     alt="Tino"
                     className="w-20 h-20 rounded-full mx-auto mb-4"
                   />
