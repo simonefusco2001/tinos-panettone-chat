@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Tino - Il Tuo Lievitista Digitale</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+      :root {
+          /* Modalità Chiara */
+          --background: 35 25% 97%;
+          --foreground: 30 15% 25%;
+          --card: 40 30% 98%;
+          --card-foreground: 30 15% 25%;
+          --popover: 40 30% 98%;
+          --popover-foreground: 30 15% 25%;
+          --primary: 38 70% 55%;
+          --primary-foreground: 40 30% 98%;
+          --secondary: 35 20% 92%;
+          --secondary-foreground: 30 15% 25%;
+          --muted: 35 15% 90%;
+          --muted-foreground: 30 10% 45%;
+          --accent: 25 55% 60%;
+          --accent-foreground: 40 30% 98%;
+          --destructive: 0 84.2% 60.2%;
+          --destructive-foreground: 40 30% 98%;
+          --border: 35 20% 88%;
+          --input: 35 20% 88%;
+          --ring: 38 70% 55%;
+          --radius: 0.75rem;
+
+          /* Effetti */
+          --gradient-warm: linear-gradient(135deg, hsl(40 60% 92%), hsl(35 50% 85%));
+          --gradient-hero: linear-gradient(180deg, hsl(40 30% 98%), hsl(38 25% 95%));
+          --shadow-soft: 0 4px 20px -4px hsl(30 15% 25% / 0.08);
+          --shadow-elevated: 0 10px 40px -8px hsl(30 15% 25% / 0.12);
+          --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      [data-theme="dark"] {
+          /* Modalità Scura */
+          --background: 30 20% 12%;
+          --foreground: 40 30% 95%;
+          --card: 30 18% 15%;
+          --card-foreground: 40 30% 95%;
+          --popover: 30 18% 15%;
+          --popover-foreground: 40 30% 95%;
+          --primary: 38 65% 60%;
+          --primary-foreground: 30 20% 12%;
+          --secondary: 30 15% 20%;
+          --secondary-foreground: 40 30% 95%;
+          --muted: 30 12% 22%;
+          --muted-foreground: 35 15% 65%;
+          --accent: 25 50% 55%;
+          --accent-foreground: 40 30% 95%;
+          --destructive: 0 62.8% 50%;
+          --destructive-foreground: 40 30% 95%;
+          --border: 30 12% 25%;
+          --input: 30 12% 25%;
+          --ring: 38 65% 60%;
+          --gradient-warm: linear-gradient(135deg, hsl(30 18% 15%), hsl(30 15% 20%));
+          --gradient-hero: linear-gradient(180deg, hsl(30 18% 15%), hsl(30 15% 18%));
+          --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
+          --shadow-elevated: 0 10px 40px -8px hsl(0 0% 0% / 0.5);
+      }
+
+      body {
+          font-family: 'Inter', sans-serif;
+          background-color: hsl(var(--background));
+          color: hsl(var(--foreground));
+          transition: var(--transition-smooth);
+      }
+
+      /* Componenti Custom */
+      .btn-primary {
+          background-color: hsl(var(--primary));
+          color: hsl(var(--primary-foreground));
+          padding: 12px;
+          border-radius: var(--radius);
+          font-weight: 600;
+          border: 1px solid hsl(var(--border));
+          box-shadow: var(--shadow-soft);
+          transition: var(--transition-smooth);
+          cursor: pointer;
+          width: 100%;
+      }
+      .btn-primary:hover {
+          filter: brightness(1.1);
+          box-shadow: 0 0 0 2px hsl(var(--ring));
+      }
+      .btn-primary:active {
+          transform: scale(0.98);
+      }
+
+      .btn-secondary {
+          background-color: hsl(var(--secondary));
+          color: hsl(var(--secondary-foreground));
+          padding: 12px;
+          border-radius: var(--radius);
+          font-weight: 500;
+          border: 1px solid hsl(var(--muted-foreground));
+          transition: var(--transition-smooth);
+          cursor: pointer;
+          width: 100%;
+      }
+      .btn-secondary:hover {
+          background-color: hsl(var(--muted));
+          color: hsl(var(--foreground));
+          border-color: hsl(var(--primary));
+      }
+
+      .card-style {
+          background-color: hsl(var(--card));
+          color: hsl(var(--card-foreground));
+          border: 1px solid hsl(var(--border));
+          border-radius: var(--radius);
+          box-shadow: var(--shadow-soft);
+      }
+
+      .input-style {
+          background-color: hsl(var(--card));
+          border: 1px solid hsl(var(--input));
+          color: hsl(var(--foreground));
+          border-radius: var(--radius);
+          padding: 0.75rem 1rem;
+          outline: none;
+          transition: var(--transition-smooth);
+          width: 100%;
+      }
+      .input-style:focus {
+          box-shadow: 0 0 0 2px hsl(var(--ring));
+          border-color: transparent;
+      }
+
+      /* Tabs */
+      .tab-active {
+          background-color: hsl(var(--secondary));
+          color: hsl(var(--secondary-foreground));
+          border-bottom: 2px solid hsl(var(--ring));
+          font-weight: 600;
+      }
+      .tab-inactive {
+          background-color: hsl(var(--card));
+          color: hsl(var(--muted-foreground));
+          border-bottom: 1px solid hsl(var(--border));
+      }
+      .tab-inactive:hover {
+          background-color: hsl(var(--secondary));
+          color: hsl(var(--foreground));
+      }
+
+      /* Animazioni base */
+      @keyframes fadeIn { from { opacity:0; transform:translateY(10px);} to { opacity:1; transform:translateY(0);} }
+      .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+
+      .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
+      .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+      .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+      @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground)); border-radius: 10px; }
+      ::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary)); }
+
+      /* Utilities generali */
+      * { border-color: hsl(var(--border)); }
+    </style>
+  </head>
+  <body class="min-h-[100dvh] w-full flex items-center justify-center p-2 md:p-4 overflow-hidden">
+    <div
+      id="toast"
+      class="fixed top-5 right-5 px-6 py-3 rounded-xl shadow-2xl transform translate-x-[150%] transition-transform duration-300 z-50 flex items-center gap-3"
+      style="background-color: hsl(var(--card)); color: hsl(var(--foreground)); border: 1px solid hsl(var(--border)); box-shadow: var(--shadow-elevated);"
+    >
+      <span id="toastIcon">✅</span>
+      <span id="toastMessage">Messaggio</span>
+    </div>
+
+    <div
+      class="w-full max-w-2xl overflow-hidden flex flex-col relative transition-all duration-300 card-style"
+      style="height: 100%; max-height: 85dvh;"
+    >
+      <div
+        id="header"
+        class="p-4 flex items-center justify-between shrink-0 z-20 relative"
+        style="background: var(--gradient-hero); border-bottom: 1px solid hsl(var(--border));"
+      >
+        <div class="flex items-center gap-3">
+          <img
+            src="/src/assets/tino-mascot.png"
+            alt="Tino"
+            class="w-10 h-10 rounded-full border border-slate-200 object-cover"
+          />
+
+          <div>
+            <h1 class="font-bold leading-tight tracking-tight" style="color: hsl(var(--foreground));">Tino</h1>
+            <div class="flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+              <p class="text-xs font-medium" style="color: hsl(var(--muted-foreground));">Lievitista Digitale</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            onclick="document.body.toggleAttribute('data-theme'); if(document.body.hasAttribute('data-theme')) document.body.setAttribute('data-theme', 'dark'); else document.body.removeAttribute('data-theme');"
+            class="p-2 rounded-full transition"
+            style="color: hsl(var(--muted-foreground));"
+            title="Cambia Tema"
+          >
+            🌗
+          </button>
+          <button
+            onclick="resetChat()"
+            class="p-2 rounded-full transition"
+            style="color: hsl(var(--muted-foreground));"
+            title="Ricomincia"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="chatContainer"
+        class="overflow-y-auto p-4 pt-4 space-y-6 scroll-smooth transition-[height] duration-300 ease-out"
+        style="height: 350px; background-color: hsl(var(--background));"
+      ></div>
+
+      <div
+        class="p-4 shrink-0 z-20"
+        id="inputArea"
+        style="background-color: hsl(var(--card)); border-top: 1px solid hsl(var(--border));"
+      >
+        <div class="text-center text-[10px] mt-3 font-mono" style="color: hsl(var(--muted-foreground));">
+          Powered by Lievitista Intelligence
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ==========================================
+      // DATA & CONSTANTS
+      // ==========================================
+
+      const PROTOCOLS = {
+          1: { name: "Eccesso di acidità lattica", desc: "Odore yogurt/formaggio fresco, retrogusto amaro, colloso.", bath: ["Bagnetto: 38°C per 15 minuti.", "Rinfresco: 1 : 1,5 : 34%, lievitazione 4h a 30°C.", "Due rinfreschi successivi: 1 : 1 : 44% a 26°C, 4h ciascuno.", "Primo rinfresco: integra 10% di farina integrale sul totale (opzionale)."], noBath: ["Riduci idratazione a 40–42%.", "Temperatura stabile 26°C.", "Esegui 2 rinfreschi ravvicinati ogni 4h, rapporto 1 : 1 : 42%.", "Nel primo rinfresco (opzionale): 0,2% di sale sulla farina o 10–15% integrale."], consolidate: ["Mantieni 18h a 18°C.", "Il giorno seguente: rinfresco identico e riposo di 24h a 18°C.", "In 2–3 giorni pH si riequilibra e il lievito stabilizza."], tips: "Anti‑lattico: preferisci 26°C, idratazione bassa e bagnetto caldo (38°C)." },
+          2: { name: "Eccesso di acidità acetica", desc: "Odore pungente di aceto/solvente, superficie lucida/grigia.", bath: ["Bagnetto: 34°C per 15 minuti.", "Rinfresco: 1 : 1,2 : 34%, lievitazione 4h a 30°C.", "Due rinfreschi: 1 : 1 : 45% a 30°C.", "Primo rinfresco: aggiungi 10–15% integrale per risvegliare i lieviti."], noBath: ["Porta temperatura a 28–30°C per favorire i lieviti.", "Rinfreschi 1 : 1 : 45% ogni 4–5h per una giornata.", "Primo rinfresco: 5% di miele/malto sul peso della farina."], consolidate: ["Riposo 12h a 20°C (ambiente).", "Se resta debole, ripeti ciclo; obiettivo: lattico/acetico ≈ 3:1."], tips: "Anti‑acetico: temperature alte (28-30°C), miele e idratazione 45%." },
+          3: { name: "Lievito debole/pigro", desc: "Non raddoppia o >8h, odore neutro/farina, compatto.", bath: ["Bagnetto: 34°C per 15 minuti.", "Rinfresco: 1 : 1,5 : 34%, lievitazione 4h a 28°C.", "Tre rinfreschi: 1 : 1 : 45% a 28°C ogni 4–5h.", "Primo rinfresco: +10% integrale (opzionale)."], noBath: ["Tre rinfreschi ravvicinati (ogni 4h) a 28°C.", "Rapporto: 1 : 1,5 : 45%.", "Primo rinfresco: +5% miele/malto.", "Se risposta lenta: un ciclo a 30°C."], consolidate: ["Al 3°/4° rinfresco: 1 : 1 : 45% e riposo 18h a 18°C.", "Ripeti 18°C per altre 18h (favorire acetico).", "Terzo giorno: ripeti ciclo caldo, poi gestione regolare."], tips: "Boost: rapporto nutriente (1:1.5), miele e calore." },
+          4: { name: "Contaminazione / Odori anomali", desc: "Marcio, ammoniaca, muffa, massa viscida o verdastra.", bath: ["Rimuovi la superficie; usa solo il cuore sano.", "Bagnetto: 34°C per 15 min con 1% di zucchero (purificante).", "Rinfresco: 1 : 1,2 : 34%, lievitazione 4h a 28°C.", "Due rinfreschi: 1 : 1 : 45% ogni 4h."], noBath: ["Conserva solo la parte centrale.", "Rinfreschi: 1 : 1 : 45% a 26°C ogni 4h.", "Primo rinfresco: opzionale +10% integrale o 0,2% sale."], consolidate: ["Mantieni 2 giorni a 18°C, poi un rinfresco a 28°C.", "Se odore persiste dopo 3 cicli, valuta ripartenza."], tips: "Sicurezza: se macchie/odori putrefattivi persistono → meglio ripartire da zero." },
+          5: { name: "Flora sbilanciata / Manutenzione", desc: "Gonfiamento rapido e collasso o immobilità. Odore alcolico.", bath: ["Bagnetto: 34°C per 15 minuti.", "Se collassa → rinfresco 1 : 1 : 34% a 24°C.", "Se immobile → rinfresco 1 : 1,5 : 34% a 28°C.", "Due rinfreschi: 1 : 1 : 45% a 26–28°C."], noBath: ["Se collassa → impasto asciutto (42% idr), 24°C.", "Se immobile → impasto morbido (45% idr), 28°C.", "Esegui 2–3 rinfreschi ravvicinati ogni 4h."], consolidate: ["Dopo riequilibrio, 1 giorno a 18°C per stabilizzare.", "Poi torna a gestione standard."], tips: "Equilibrio: gestione mirata in base al comportamento (collassa vs immobile)." }
+      };
+
+      const CREATION_METHODS = {
+          tradizionale: {
+              name: "Avvio Tradizionale Graduale",
+              desc: "5+ Giorni. Metodo classico con acqua e farina.",
+              steps: [
+                  "<strong>Giorno 1:</strong> Miscela farina (preferibilmente segale/integrale) e acqua (~45%). Riposo 24–36h a 26–28°C.",
+                  "<strong>Giorno 2:</strong> Verifica bolle. Primo rinfresco 1:1:45%. Riposo 26–28°C.",
+                  "<strong>Giorno 3:</strong> Rinfreschi regolari ogni 12h. Osserva odore (frutta matura) e crescita.",
+                  "<strong>Giorno 4:</strong> Passaggio a farina 0/00. Rinfreschi ogni 4–5h se l’attività aumenta.",
+                  "<strong>Giorno 5:</strong> Test galleggiamento e verifica raddoppio in ~3.5h."
+              ],
+              notes: "Temperature chiave: maturazioni efficaci 25–30°C. Segnali di maturità: odore dolce‑acidulo, volume 1.5–2x in 3–3.5h a 28°C. Riposo/purificazione: 16–18°C quando necessario."
+          },
+          rapido: {
+              name: "Avvio Rapido a Bassa Acidità",
+              desc: "7 Giorni. Metodo moderno con acqua frizzante e gestione solida.",
+              steps: [
+                  "<strong>Giorno 1 (sera):</strong> 10g farina macinata fine (con germe) + 10g acqua frizzante tiepida. Vasetto coperto, 30°C. Mescola 5–6 volte nelle 24h.",
+                  "<strong>Giorno 2:</strong> +10g acqua frizzante +10g farina integrale. 30°C. Segna tacca.",
+                  "<strong>Giorno 3 (Mattino):</strong> +20g acqua frizzante +20g farina.",
+                  "<strong>Giorno 3 (Pomeriggio):</strong> +40g acqua frizzante +20g integrale +20g farina forte. Quando raddoppia: rendi solido (160g coltura + 80g farina forte); immersione in acqua frizzante 18–20°C per la notte.",
+                  "<strong>Giorno 4:</strong> Rinfreschi a 28°C. Es: 240g pre‑lievito + 240g farina + ~40% acqua; poi 580g + 580g + 50% acqua. Panno con croce.",
+                  "<strong>Giorno 5:</strong> Ripeti 2–3 rinfreschi. Esegui Test della Spia (16°C).",
+                  "<strong>Giorno 6:</strong> Rinfresco per prodotto ricco: pari peso madre/farina, acqua 40–50%. 28°C per 2.5h. Dividi.",
+                  "<strong>Giorno 7:</strong> Lievito pronto."
+              ],
+              notes: "Equilibrio acidi: 25–30°C; madre giovane a bassa acidità. Spinta forno prolungata. Regolarità di orari migliora prevedibilità."
+          },
+          assistito: {
+              name: "Avvio Assistito con Coltura Naturale",
+              desc: "Accelera l'avvio usando frutta macerata o yogurt.",
+              steps: [
+                  "<strong>Giorno 1:</strong> Macera 40g bucce di frutta in 200g acqua a ~26°C per 24h; filtra → ‘acqua fermentata’.",
+                  "<strong>Giorno 2:</strong> Poolish: 100g acqua fermentata + 100g farina integrale/segale. 24°C per 48–72h (attendi bolle).",
+                  "<strong>Fase di avvio (G3):</strong> Primo rafforzamento. Poolish + 50g farina forte (24°C/24h).",
+                  "<strong>Fase centrale (G4-6):</strong> Rinfreschi quotidiani 1:1 (~45% acqua). 24°C per 24h ciascuno.",
+                  "<strong>Giorno 7 (Verifica):</strong> Rinfresco a 28°C: deve fare 1.5–2x in 3.5h. Se pronto: cilindra/lega e riposo 16–18h a 16°C."
+              ],
+              notes: "Evita eccessi lattici (paste molli/calde). Preferisci 40–42% idratazione, 26–28°C. Anti‑acetico: 28–30°C, 1:1:45% e 5% miele. pH target ~4.1–4.3."
+          },
+          enzimatico: {
+              name: "Avvio Spontaneo Enzimatico",
+              desc: "Basato su segale e gestione enzimatica.",
+              steps: [
+                  "<strong>Giorno 1:</strong> 100g farina segale + 50g acqua, palla coperta, 25°C per 24h.",
+                  "<strong>Giorni 2-3 (Attivazione):</strong> Serie di rinfreschi giornalieri con riduzione progressiva delle ore.",
+                  "<strong>Fase centrale:</strong> Supporto enzimi con estratto di malto diastasico se l'attività è lenta.",
+                  "<strong>Stabilizzazione:</strong> Obiettivo maturare in ~8h, poi stabilizzare con 2 rinfreschi da 3.5–4h e 16h riposo.",
+                  "<strong>Verifica finale:</strong> Controllo raddoppio e pH."
+              ],
+              notes: "Evita eccessi lattici. Test spia 16°C; pH operativo madre pronta ~4.1–4.3."
+          }
+      };
+
+      let state = {
+          step: 'init',
+          chatExpanded: false,
+          flow: null,
+          profile: {
+              frequency: null,
+              ratioHot: null,
+              ratioMaint: null,
+              hydration: null,
+              tempRefresh: null,
+              tempMaint: null,
+              routine: null,
+              problems: [],
+          },
+          diagnosisId: null,
+          creationMethod: null,
+      };
+
+      // ==========================================
+      // VALIDATION LOGIC
+      // ==========================================
+
+      function validateRoutineInput(text) {
+          const cleanText = text.trim();
+          const result = {
+              inputAccepted: false,
+              validationFeedback: null,
+              rewritePrompt: null,
+              summary: null,
+              extractedSignals: {}
+          };
+
+          if (cleanText.length < 30) {
+              result.validationFeedback = "Descrizione troppo breve. Per aiutarti ho bisogno di più dettagli.";
+              result.rewritePrompt = getRewritePrompt();
+              return result;
+          }
+
+          const keywords = ["odore", "aceto", "yogurt", "alcol", "dolce", "amaro", "raddoppio", "triplico", "ore", "ph", "temperatura", "°c", "idratazione", "%", "consistenza", "colloso", "compatto", "muffa", "grigia", "lucida", "frequenza", "rinfresco"];
+          const lowerText = cleanText.toLowerCase();
+          let matches = 0;
+          keywords.forEach(k => { if (lowerText.includes(k)) matches++; });
+
+          if (matches < 1) {
+              result.validationFeedback = "La descrizione è un po' generica. Usa termini tecnici come 'odore', 'raddoppio', 'temperatura' o 'consistenza'.";
+              result.rewritePrompt = getRewritePrompt();
+              return result;
+          }
+
+          result.inputAccepted = true;
+          result.summary = `Hai descritto un lievito con queste caratteristiche: "${cleanText.substring(0, 50)}..."`;
+          return result;
+      }
+
+      function getRewritePrompt() {
+          return `
+            <div class="mt-2 p-3 rounded-lg text-xs border" style="background-color: hsl(var(--card)); border-color: hsl(var(--border)); color: hsl(var(--muted-foreground));">
+              <strong>Prova a seguire questa traccia:</strong>
+              <ul class="list-disc ml-4 mt-1 space-y-1">
+                 <li>Odore (es. aceto, yogurt, alcol)</li>
+                 <li>Crescita (es. raddoppio in 4 ore)</li>
+                 <li>Temperatura (es. 26°C)</li>
+                 <li>Consistenza (es. colloso, compatto)</li>
+              </ul>
+            </div>
+          `;
+      }
+
+      // ==========================================
+      // CORE ENGINE
+      // ==========================================
+
+      function init() {
+          setTimeout(() => {
+              addBotMessage("Ciao! Sono Tino. Analizzo il tuo lievito e ti do protocolli operativi.");
+              setInputContent(`
+            <button onclick="handleChoice('START_FLOW')" class="btn-primary w-full">Inizia</button>
+          `);
+          }, 500);
+      }
+
+      async function handleChoice(choice, payload) {
+          if(choice !== 'SEQ_ROUTINE_SAVE' && choice !== 'SEQ_ROUTINE_RETRY') {
+              setInputContent('');
+          }
+          if (choice === 'SEQ_ROUTINE_SAVE') setInputContent('');
+
+          switch (choice) {
+              case 'START_FLOW':
+                  addUserMessage("Inizia");
+                  startEntryFlow();
+                  break;
+
+              case 'FLOW_EXISTING':
+                  state.flow = 'analysis';
+                  addUserMessage("Sì, ne ho già uno");
+                  startAnalysisFlow();
+                  break;
+
+              case 'FLOW_CREATION':
+                  state.flow = 'creation';
+                  addUserMessage("No, ma vorrei crearlo!");
+                  startCreationFlow();
+                  break;
+
+              case 'SHOW_METHOD':
+                  state.creationMethod = payload;
+                  renderCreationMethod(payload);
+                  break;
+
+              case 'SEQ_FREQ': state.profile.frequency = payload; addUserMessage(payload); askRatioHot(); break;
+              case 'SEQ_RATIO_HOT_OPT': if(payload==='Altro') askCustomInput('Specificare rapporto a caldo', 'SEQ_RATIO_HOT_SAVE'); else { state.profile.ratioHot = payload; addUserMessage(payload); askRatioMaint(); } break;
+              case 'SEQ_RATIO_HOT_SAVE': if(!payload.trim()){ showToast("Valore richiesto","⚠️"); askRatioHot(); return; } state.profile.ratioHot = payload; addUserMessage(payload); askRatioMaint(); break;
+              case 'SEQ_RATIO_MAINT_OPT': if(payload==='Altro') askCustomInput('Specificare rapporto mantenimento', 'SEQ_RATIO_MAINT_SAVE'); else { state.profile.ratioMaint = payload; addUserMessage(payload); askHydration(); } break;
+              case 'SEQ_RATIO_MAINT_SAVE': if(!payload.trim()){ showToast("Valore richiesto","⚠️"); askRatioMaint(); return; } state.profile.ratioMaint = payload; addUserMessage(payload); askHydration(); break;
+              case 'SEQ_HYDRA_OPT': if(payload==='Altro') askCustomInput('Specificare idratazione', 'SEQ_HYDRA_SAVE'); else { state.profile.hydration = payload; addUserMessage(payload); askTemps(); } break;
+              case 'SEQ_HYDRA_SAVE': if(!payload.trim()){ showToast("Valore richiesto","⚠️"); askHydration(); return; } state.profile.hydration = payload; addUserMessage(payload); askTemps(); break;
+              case 'SEQ_TEMPS_OPT': if(typeof payload==='object'){ state.profile.tempRefresh=payload.refresh; state.profile.tempMaint=payload.maint; addUserMessage(payload.label); askRoutine(); } else if(payload==='Altro'){ askCustomInput('Specifica temperature (es. 26°C / 15°C)', 'SEQ_TEMPS_SAVE'); } break;
+              case 'SEQ_TEMPS_SAVE': if(!payload.trim()){ showToast("Valore richiesto","⚠️"); askTemps(); return; } state.profile.tempRefresh=payload; state.profile.tempMaint=payload; addUserMessage(payload); askRoutine(); break;
+
+              case 'SEQ_ROUTINE_SAVE':
+                  const routineText = payload;
+                  addUserMessage(routineText);
+                  const validation = validateRoutineInput(routineText);
+                  if (!validation.inputAccepted) {
+                      await addBotMessage(`⚠️ <strong>Alt. Non posso procedere.</strong><br>${validation.validationFeedback}`);
+                      await addBotWidget(validation.rewritePrompt);
+                      askRoutine(true);
+                  } else {
+                      state.profile.routine = routineText;
+                      await addBotMessage("✅ Descrizione chiara. Ho registrato i dati.");
+                      askProblems();
+                  }
+                  break;
+
+              case 'SEQ_PROBLEMS': state.profile.problems = [payload]; addUserMessage(payload); calculateDiagnosis(payload); break;
+
+              case 'SHOW_PROTOCOL': showProtocolCard(); break;
+              case 'ACTION_FINISH': location.reload(); break;
+
+              case 'ACTION_EMAIL':
+                  askEmailInline();
+                  break;
+
+              case 'SUBMIT_EMAIL_INLINE':
+                  handleEmailSubmit(payload);
+                  break;
+          }
+      }
+
+      function startEntryFlow() {
+          state.step = 'entry';
+          addBotMessage("Analizziamo la tua situazione.");
+          setTimeout(() => {
+              addBotMessage("Hai già un lievito?");
+              renderButtons([
+                  {text: "Sì, ne ho già uno", action: 'FLOW_EXISTING', val: ""},
+                  {text: "No, ma vorrei crearlo!", action: 'FLOW_CREATION', val: ""}
+              ]);
+          }, 500);
+      }
+
+      async function startCreationFlow() {
+          await addBotMessage("Perfetto! Creiamo il tuo lievito madre da zero. Scegli il metodo che preferisci.");
+          renderButtons([
+              {text: "Avvio Tradizionale Graduale", action: 'SHOW_METHOD', val: "tradizionale"},
+              {text: "Avvio Rapido a Bassa Acidità", action: 'SHOW_METHOD', val: "rapido"},
+              {text: "Avvio Assistito con Coltura Naturale", action: 'SHOW_METHOD', val: "assistito"},
+              {text: "Avvio Spontaneo Enzimatico", action: 'SHOW_METHOD', val: "enzimatico"}
+          ]);
+      }
+
+      async function renderCreationMethod(methodId) {
+          // *** RIMOSSO BLOCCO EMAIL ***
+          const m = CREATION_METHODS[methodId];
+          const stepsHtml = m.steps.map((s, i) => `<li class="flex gap-3 items-start"><span class="bg-indigo-100 text-indigo-800 font-bold rounded-full w-6 h-6 flex items-center justify-center shrink-0 text-xs mt-0.5">${i+1}</span><span class="text-slate-700 text-sm">${s}</span></li>`).join('');
+
+          const html = `
+          <div class="bg-white border border-indigo-200 rounded-xl shadow-md overflow-hidden">
+            <div class="bg-indigo-50 p-4 border-b border-indigo-100">
+              <h3 class="font-bold text-slate-900 text-lg leading-tight">${m.name}</h3>
+              <p class="text-xs text-slate-500 italic mt-1">${m.desc}</p>
+            </div>
+            <div class="p-5">
+              <ul class="space-y-4">${stepsHtml}</ul>
+            </div>
+            <div class="bg-slate-50 p-3 text-xs text-slate-500 border-t border-slate-100">
+              🧪 <strong>Note Operative:</strong> ${m.notes}
+            </div>
+          </div>
+        `;
+          await addBotWidget(html);
+          showFinalButtons();
+      }
+
+      async function startAnalysisFlow() {
+          addBotMessage("Ogni quanto lo rinfreschi?");
+          renderButtons([
+              {text: "Ogni giorno", action: 'SEQ_FREQ', val: "Ogni giorno"},
+              {text: "Ogni 2-3 gg", action: 'SEQ_FREQ', val: "Ogni 2-3 gg"},
+              {text: "Una volta a settimana", action: 'SEQ_FREQ', val: "Una volta a settimana"}
+          ]);
+      }
+
+      function askRatioHot() { setTimeout(() => { addBotMessage("Che rapporto usi quando rinfreschi a caldo?"); renderButtons([{text: "1:1", action: 'SEQ_RATIO_HOT_OPT', val: "1:1"}, {text: "1:1.5", action: 'SEQ_RATIO_HOT_OPT', val: "1:1.5"}, {text: "1:2", action: 'SEQ_RATIO_HOT_OPT', val: "1:2"}, {text: "Altro", action: 'SEQ_RATIO_HOT_OPT', val: "Altro"}]); }, 500); }
+      function askRatioMaint() { setTimeout(() => { addBotMessage("Che rapporto usi nei tuoi rinfreschi di mantenimento?"); renderButtons([{text: "1:1", action: 'SEQ_RATIO_MAINT_OPT', val: "1:1"}, {text: "1:1.5", action: 'SEQ_RATIO_MAINT_OPT', val: "1:1.5"}, {text: "1:2", action: 'SEQ_RATIO_MAINT_OPT', val: "1:2"}, {text: "Altro", action: 'SEQ_RATIO_MAINT_OPT', val: "Altro"}]); }, 500); }
+      function askHydration() { setTimeout(() => { addBotMessage("Che percentuale di idratazione usi nei tuoi rinfreschi?"); renderButtons([{text: "40%", action: 'SEQ_HYDRA_OPT', val: "40%"}, {text: "42%", action: 'SEQ_HYDRA_OPT', val: "42%"}, {text: "45%", action: 'SEQ_HYDRA_OPT', val: "45%"}, {text: "50%", action: 'SEQ_HYDRA_OPT', val: "50%"}, {text: "Altro", action: 'SEQ_HYDRA_OPT', val: "Altro"}]); }, 500); }
+
+      function askTemps() {
+          setTimeout(() => {
+              addBotMessage("Che temperatura di lievitazione e mantenimento usi?");
+              const opts = [
+                  {text: "Standard (28°C / 18°C)", action: 'SEQ_TEMPS_OPT', val: {refresh: "28°C", maint: "18°C", label: "Standard (28°C / 18°C)"}},
+                  {text: "Frigo (28°C / 4°C)", action: 'SEQ_TEMPS_OPT', val: {refresh: "28°C", maint: "4°C", label: "Frigo (28°C / 4°C)"}},
+                  {text: "Casalinga (ambiente)", action: 'SEQ_TEMPS_OPT', val: {refresh: "Ambiente", maint: "Ambiente", label: "Casalinga (ambiente)"}},
+                  {text: "Altro", action: 'SEQ_TEMPS_OPT', val: "Altro"}
+              ];
+              let html = `<div class="flex flex-col gap-2">`;
+              opts.forEach(o => {
+                  const valStr = (typeof o.val === 'string') ? `'${o.val}'` : JSON.stringify(o.val).replace(/"/g, "&quot;");
+                  html += `<button onclick="handleChoice('${o.action}', ${valStr})" class="btn-secondary text-left">${o.text}</button>`;
+              });
+              html += `</div>`;
+              setInputContent(html);
+          }, 500);
+      }
+
+      function askRoutine(isRetry = false) {
+          setTimeout(() => {
+              if (!isRetry) addBotMessage("Descrivi brevemente i segni che il tuo lievito ti sta mandando (es. triplico in 4h, odore, sapore, ph se possibile)");
+              else addBotMessage("Riprova inserendo una descrizione più completa:");
+
+              setInputContent(`
+            <div class="flex flex-col gap-2 w-full">
+              <textarea id="customInput" class="input-style h-24 resize-none" placeholder="Scrivi qui... (Es: Odore di yogurt, raddoppia in 4h a 28°C...)"></textarea>
+              <button onclick="submitTextInput('SEQ_ROUTINE_SAVE')" class="btn-primary">Invia</button>
+            </div>
+          `);
+              if (isRetry) setTimeout(() => document.getElementById('customInput').focus(), 200);
+          }, 500);
+      }
+
+      function askProblems() {
+          setTimeout(() => {
+              addBotMessage("Che problemi principali pensi che il tuo lievito abbia?");
+              renderButtons([
+                  {text: "Acido/Pungente", action: 'SEQ_PROBLEMS', val: "Acido/Pungente"},
+                  {text: "Amaro/Yogurt", action: 'SEQ_PROBLEMS', val: "Amaro/Yogurt"},
+                  {text: "Lento/Debole", action: 'SEQ_PROBLEMS', val: "Lento/Debole"},
+                  {text: "Muffe/Strano", action: 'SEQ_PROBLEMS', val: "Muffe/Strano"},
+                  {text: "Nessuno", action: 'SEQ_PROBLEMS', val: "Nessuno"}
+              ]);
+          }, 500);
+      }
+
+      async function calculateDiagnosis(problem) {
+          const summaryHtml = `
+          <div class="card-style p-4 text-sm shadow-sm mb-2">
+            <h4 class="font-bold mb-2 pb-1" style="color: hsl(var(--primary)); border-bottom: 1px solid hsl(var(--border));">📊 Resoconto gestione</h4>
+            <div class="grid grid-cols-2 gap-x-2 gap-y-1" style="color: hsl(var(--muted-foreground));">
+              <div>Freq: <span class="font-medium" style="color: hsl(var(--foreground));">${esc(state.profile.frequency)}</span></div>
+              <div>Idra: <span class="font-medium" style="color: hsl(var(--foreground));">${esc(state.profile.hydration)}</span></div>
+              <div>Caldo: <span class="font-medium" style="color: hsl(var(--foreground));">${esc(state.profile.ratioHot)}</span></div>
+              <div>Maint: <span class="font-medium" style="color: hsl(var(--foreground));">${esc(state.profile.ratioMaint)}</span></div>
+              <div class="col-span-2">Temp: <span class="font-medium" style="color: hsl(var(--foreground));">${esc(state.profile.tempRefresh)} / ${esc(state.profile.tempMaint)}</span></div>
+            </div>
+          </div>
+        `;
+          await addBotWidget(summaryHtml);
+
+          if (problem === "Nessuno") {
+              state.diagnosisId = null;
+              await addBotMessage("Ottimo! Sembra che il tuo lievito stia bene. Ecco il riepilogo della tua gestione.");
+              showFinalButtons();
+              return;
+          }
+
+          let pid = 5;
+          if (problem === "Acido/Pungente") pid = 2;
+          else if (problem === "Amaro/Yogurt") pid = 1;
+          else if (problem === "Lento/Debole") pid = 3;
+          else if (problem === "Muffe/Strano") pid = 4;
+
+          state.diagnosisId = pid;
+          const protocol = PROTOCOLS[pid];
+
+          // *** RIMOSSO BLOCCO EMAIL ***
+
+          await addBotMessage(`In base a quello che mi dici, ti propongo il <strong>Protocollo ${pid}: ${protocol.name}</strong>.`);
+          setInputContent(`
+          <button onclick="handleChoice('SHOW_PROTOCOL')" class="btn-primary flex items-center justify-center gap-2">
+            Mostra guida passo-passo
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+          </button>
+        `);
+      }
+
+      async function showProtocolCard() {
+          if (!state.diagnosisId) return;
+          const p = PROTOCOLS[state.diagnosisId];
+          const makeList = (items) => items.map((s,i) => `<li class="flex gap-3 items-start"><span class="rounded-full w-6 h-6 flex items-center justify-center shrink-0 text-xs mt-0.5" style="background-color: hsl(var(--secondary)); color: hsl(var(--secondary-foreground)); font-weight: bold;">${i+1}</span><span style="color: hsl(var(--foreground));" class="text-sm">${s}</span></li>`).join('');
+
+          const html = `
+          <div class="rounded-xl shadow-md overflow-hidden card-style">
+            <div class="p-4" style="border-bottom: 1px solid hsl(var(--border)); background-color: hsl(var(--muted));">
+              <h3 class="font-bold text-lg leading-tight" style="color: hsl(var(--foreground));">${p.name}</h3>
+              <p class="text-xs italic mt-1" style="color: hsl(var(--muted-foreground));">${p.desc}</p>
+            </div>
+            <div class="flex border-b text-sm" style="border-color: hsl(var(--border));">
+              <button onclick="switchTab('bath')" id="tab-bath" class="flex-1 py-3 border-b-2 tab-inactive transition">Con Bagnetto</button>
+              <button onclick="switchTab('noBath')" id="tab-noBath" class="flex-1 py-3 border-b-2 tab-active transition">Senza Bagnetto</button>
+              <button onclick="switchTab('conso')" id="tab-conso" class="flex-1 py-3 border-b-2 tab-inactive transition">Consolidamento</button>
+            </div>
+            <div class="p-5 min-h-[200px]">
+              <div id="content-bath" class="hidden space-y-3"><h4 class="font-bold text-sm mb-2" style="color: hsl(var(--primary));">Procedura con Bagnetto</h4><ul class="space-y-3">${makeList(p.bath)}</ul></div>
+              <div id="content-noBath" class="block space-y-3"><h4 class="font-bold text-sm mb-2" style="color: hsl(var(--primary));">Procedura Senza Bagnetto</h4><ul class="space-y-3">${makeList(p.noBath)}</ul></div>
+               <div id="content-conso" class="hidden space-y-3"><h4 class="font-bold text-sm mb-2" style="color: hsl(var(--primary));">Fase di Consolidamento</h4><ul class="space-y-3">${makeList(p.consolidate)}</ul></div>
+            </div>
+            <div class="p-3 text-xs border-t" style="background-color: hsl(var(--card)); border-color: hsl(var(--border)); color: hsl(var(--muted-foreground));">💡 <strong>Nota:</strong> ${p.tips}</div>
+          </div>
+        `;
+          await addBotWidget(html);
+          showFinalButtons();
+      }
+
+      // Global scope for Tabs
+      window.switchTab = function(tabName) {
+          ['bath', 'noBath', 'conso'].forEach(t => {
+              const btn = document.getElementById(`tab-${t}`);
+              const content = document.getElementById(`content-${t}`);
+              if(t === tabName) {
+                  btn.classList.remove('tab-inactive'); btn.classList.add('tab-active');
+                  content.classList.remove('hidden'); content.classList.add('block', 'fade-in');
+              } else {
+                  btn.classList.add('tab-inactive'); btn.classList.remove('tab-active');
+                  content.classList.remove('block', 'fade-in'); content.classList.add('hidden');
+              }
+          });
+      };
+
+      // ==========================================
+      // FINAL BUTTONS & EMAIL LOGIC
+      // ==========================================
+
+      function showFinalButtons() {
+          setInputContent(`
+          <div class="flex flex-col gap-2">
+            <button onclick="handleChoice('ACTION_EMAIL')" class="btn-secondary">📧 Invia email (Facoltativo)</button>
+            <button onclick="handleChoice('ACTION_FINISH')" class="btn-primary">Finito</button>
+          </div>
+        `);
+      }
+
+      function askEmailInline() {
+          // Mini form inline senza modale
+          setInputContent(`
+          <div class="flex flex-col gap-2 w-full fade-in">
+            <label class="text-xs text-slate-500 ml-1">Inserisci la tua email per restare aggiornato</label>
+            <div class="flex gap-2">
+              <input type="email" id="inlineEmail" class="input-style" placeholder="tu@esempio.com" aria-label="Indirizzo email" required onkeydown="if(event.key === 'Enter') handleChoice('SUBMIT_EMAIL_INLINE', this.value)">
+              <button onclick="handleChoice('SUBMIT_EMAIL_INLINE', document.getElementById('inlineEmail').value)" class="btn-primary w-auto px-6">Invia</button>
+            </div>
+          </div>
+        `);
+          // Force focus
+          setTimeout(() => {
+              const el = document.getElementById('inlineEmail');
+              if(el) el.focus();
+          }, 100);
+      }
+
+      async function handleEmailSubmit(emailInput) {
+          // Rimuove l'input DOPO aver letto il valore
+          setInputContent('');
+
+          const email = emailInput ? emailInput.trim() : '';
+
+          // Validazione Semplificata ma Efficace
+          const isValid = email.length > 5 && email.includes('@') && email.split('@')[1].includes('.');
+
+          if (!isValid) {
+              showToast('Email non valida (manca @ o .)', '⚠️');
+              // Ripropone l'input
+              askEmailInline();
+              return;
+          }
+
+          // Successo
+          state.isLoggedIn = true;
+          state.user = { email: email };
+
+          addUserMessage(email);
+          showToast('Email confermata!');
+
+          await addBotMessage("Email salvata. Come posso aiutarti?");
+          showFinalCTA();
+      }
+
+      async function showFinalCTA() {
+          await addBotMessage(`
+          <strong>Tutto chiaro?</strong><br>
+          Per supportarti al meglio, ti chiedo 3 piccole cose:
+          <ol class="list-decimal ml-4 mt-2 space-y-1">
+            <li>Conferma la tua email per le guide future.</li>
+            <li>Entra nel gruppo Facebook <em>"Gli Starter"</em>.</li>
+            <li>Lasciami un feedback veloce.</li>
+          </ol>
+        `);
+
+          setInputContent(`
+          <div class="flex flex-col gap-2 w-full fade-in">
+
+            <button class="btn-secondary text-xs flex items-center justify-center gap-2" disabled>
+          ✅ Email attiva: ${state.user?.email || '...'}
+          </button>
+
+              <a href="https://www.facebook.com/groups/glistarter" target="_blank" class="btn-primary hover:filter brightness-110 text-center flex items-center justify-center gap-2 no-underline" style="background-color: #1877F2; color: white; border: none;">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036c-2.148 0-2.971.956-2.971 3.059v.913h3.5l-.566 3.667h-2.934v7.98c5.091-.975 8.941-5.438 8.941-10.731 0-6.067-4.922-10.988-10.988-10.988-6.066 0-10.988 4.921-10.988 10.988 0 5.263 3.807 9.704 8.864 10.71z"/></svg>
+          Unisciti a "Gli Starter"
+          </a>
+
+              <div class="flex gap-1 justify-center p-2 rounded-xl border" style="background-color: hsl(var(--card)); border-color: hsl(var(--border));">
+          <span class="text-xs self-center mr-2" style="color: hsl(var(--muted-foreground));">Vota Tino:</span>
+          ${[1,2,3,4,5].map(star => `
+                <button onclick="handleFeedback(${star})" class="text-2xl hover:scale-110 transition focus:outline-none transform cursor-pointer">⭐</button>
+              `).join('')}
+          </div>
+
+          <button onclick="location.reload()" class="text-xs underline mt-2 cursor-pointer" style="color: hsl(var(--muted-foreground));">Ricomincia (Finito)</button>
+          </div>
+          `);
+      }
+
+      function handleFeedback(stars) {
+        showToast(`Grazie per le ${stars} stelle!`, '❤️');
+      }
+
+      // ==========================================
+      // UTILITIES
+      // ==========================================
+
+      function renderButtons(buttons) {
+        let html = `<div class="grid grid-cols-2 gap-2">`;
+        buttons.forEach(b => {
+          const extraClass = (buttons.length % 2 !== 0 && b === buttons[buttons.length-1]) ? 'col-span-2' : '';
+          html += `<button onclick="handleChoice('${b.action}', '${b.val}')" class="btn-secondary ${extraClass}">${b.text}</button>`;
+        });
+        html += `</div>`;
+          setInputContent(html);
+          }
+
+      function askCustomInput(placeholder, nextAction) {
+          setInputContent(`
+          <div class="flex gap-2 w-full">
+            <input type="text" id="customInput" class="input-style" placeholder="${placeholder}" onkeydown="if(event.key === 'Enter') submitTextInput('${nextAction}')">
+            <button onclick="submitTextInput('${nextAction}')" class="btn-primary w-auto px-4">OK</button>
+          </div>
+        `);
+          setTimeout(() => document.getElementById('customInput')?.focus(), 100);
+      }
+
+      function submitTextInput(action) {
+          const val = document.getElementById('customInput').value;
+          handleChoice(action, val);
+      }
+
+      window.resetChat = function() {
+          location.reload();
+      }
+
+      async function addBotMessage(textHtml, delay = 500) {
+          // Definizione avatar
+          // Dentro addBotMessage(textHtml, delay = 500)
+          // Dentro addBotMessage(textHtml, delay = 500)
+          const avatarHtml = `<img src="/src/assets/tino-mascot.png" alt="Tino" class="h-8 w-8 rounded-full border border-slate-200 object-cover" />`;
+
+
+
+          const typeId = 'typing-' + Date.now();
+
+          document.getElementById('chatContainer').insertAdjacentHTML('beforeend',
+              `<div id="${typeId}" class="flex w-full mt-2 space-x-3 max-w-xs fade-in">
+             <div class="flex-shrink-0">${avatarHtml}</div>
+             <div class="card-style p-3 rounded-r-xl rounded-bl-xl border border-[hsl(var(--border))]">
+               <div class="flex space-x-1 h-4 items-center">
+                 <div class="w-2 h-2 rounded-full typing-dot" style="background-color: hsl(var(--muted-foreground));"></div>
+                 <div class="w-2 h-2 rounded-full typing-dot" style="background-color: hsl(var(--muted-foreground));"></div>
+                 <div class="w-2 h-2 rounded-full typing-dot" style="background-color: hsl(var(--muted-foreground));"></div>
+               </div>
+             </div>
+           </div>`
+          );
+
+          scrollToBottom();
+          await new Promise(r => setTimeout(r, delay));
+          document.getElementById(typeId).remove();
+
+          document.getElementById('chatContainer').insertAdjacentHTML('beforeend',
+              `<div class="flex w-full mt-4 space-x-3 max-w-[95%] fade-in">
+             <div class="flex-shrink-0">${avatarHtml}</div>
+             <div>
+               <div class="card-style p-4 rounded-2xl rounded-tl-none shadow-sm text-sm md:text-base leading-relaxed">
+                 ${textHtml}
+               </div>
+             </div>
+           </div>`
+          );
+
+          scrollToBottom();
+      }
+
+      async function addBotWidget(htmlContent) {
+          document.getElementById('chatContainer').insertAdjacentHTML('beforeend', `<div class="flex w-full mt-2 space-x-3 max-w-full fade-in justify-start"><div class="w-10 flex-shrink-0"></div><div class="w-full max-w-md">${htmlContent}</div></div>`);
+          scrollToBottom();
+      }
+
+      function addUserMessage(text) {
+          if (!state.chatExpanded) {
+              state.chatExpanded = true;
+              document.getElementById('chatContainer').style.height = '550px';
+          }
+
+          const wrapper = document.createElement('div');
+          wrapper.className = "flex w-full mt-4 space-x-3 max-w-[90%] ml-auto justify-end fade-in";
+          const inner = document.createElement('div');
+          const bubble = document.createElement('div');
+          bubble.className = "p-3 px-5 rounded-2xl rounded-tr-none shadow-md text-sm md:text-base leading-relaxed";
+          bubble.style.backgroundColor = "hsl(var(--primary))";
+          bubble.style.color = "hsl(var(--primary-foreground))";
+          bubble.textContent = text;
+          inner.appendChild(bubble); wrapper.appendChild(inner);
+          document.getElementById('chatContainer').appendChild(wrapper);
+          scrollToBottom();
+      }
+
+      function setInputContent(html) {
+          const area = document.getElementById('inputArea');
+          area.innerHTML = html;
+          if(area.firstElementChild) area.firstElementChild.classList.add('fade-in');
+      }
+
+      function scrollToBottom() {
+          const container = document.getElementById('chatContainer');
+          setTimeout(() => container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' }), 100);
+      }
+
+      function showToast(msg, icon = '✅') {
+          const toast = document.getElementById('toast');
+          document.getElementById('toastMessage').textContent = msg;
+          document.getElementById('toastIcon').textContent = icon;
+          toast.classList.remove('translate-x-[150%]');
+          setTimeout(() => toast.classList.add('translate-x-[150%]'), 3000);
+      }
+
+      function esc(str) {
+          if(!str) return '-';
+          return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+
+      init();
+    </script>
+  </body>
+</html>
